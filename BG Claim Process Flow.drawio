@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0" version="25.0.3">
   <diagram name="Page-1" id="K2Ft-GB5REPkYJW7Gnac">
-    <mxGraphModel dx="1489" dy="1921" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1226" dy="1776" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -349,8 +349,8 @@
         <mxCell id="lWiCxJjzuaAZRDkpksAD-47" value="&lt;div&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 11px;&quot;&gt;Debit advice and/or&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 11px;&quot;&gt;Related document​, and Credit Beneficiary&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;spacingLeft=6;spacingRight=6;arcSize=9;" vertex="1" parent="1">
           <mxGeometry x="900" y="-250" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="lWiCxJjzuaAZRDkpksAD-50" value="" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;spacingLeft=6;spacingRight=6;arcSize=9;" vertex="1" parent="1">
-          <mxGeometry x="900" y="-980" width="120" height="60" as="geometry" />
+        <mxCell id="lWiCxJjzuaAZRDkpksAD-50" value="&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;; text-align: left; text-indent: -24px;&quot;&gt;6.&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;; background-color: initial; text-indent: -0.25in; line-height: 13.8px;&quot;&gt;Send Applicant debit advice and/or related document for reference, and&amp;nbsp;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;spacingLeft=6;spacingRight=6;arcSize=9;" vertex="1" parent="1">
+          <mxGeometry x="880" y="-850" width="160" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

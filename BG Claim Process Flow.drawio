@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0" version="25.0.3">
   <diagram name="Page-1" id="K2Ft-GB5REPkYJW7Gnac">
-    <mxGraphModel dx="868" dy="1551" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1042" dy="1641" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -30,7 +30,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="y3RuGc80KyFvCgliJlC9-83" value="TFO/BU" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;startSize=40;fillColor=#cce5ff;strokeColor=#36393d;" parent="y3RuGc80KyFvCgliJlC9-77" vertex="1">
-          <mxGeometry y="180" width="860" height="190" as="geometry" />
+          <mxGeometry y="180" width="860" height="110" as="geometry" />
         </mxCell>
         <mxCell id="y3RuGc80KyFvCgliJlC9-84" value="TFO" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;startSize=40;fillColor=#cce5ff;strokeColor=#36393d;" parent="y3RuGc80KyFvCgliJlC9-83" vertex="1">
           <mxGeometry y="110" width="860" height="280" as="geometry" />
@@ -212,46 +212,39 @@
         <mxCell id="y3RuGc80KyFvCgliJlC9-135" value="&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 11px;&quot;&gt;Verify Information&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="y3RuGc80KyFvCgliJlC9-110" vertex="1">
           <mxGeometry x="460" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="kFVHqrrAhFQWBblv3AdB-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="kFVHqrrAhFQWBblv3AdB-1" target="kFVHqrrAhFQWBblv3AdB-2" edge="1">
+        <mxCell id="kFVHqrrAhFQWBblv3AdB-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" edge="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="500" y="-790" as="targetPoint" />
+            <mxPoint x="455" y="-825" as="targetPoint" />
+            <mxPoint x="130" y="-605" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="456" y="-605" />
+              <mxPoint x="456" y="-825" />
+            </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="kFVHqrrAhFQWBblv3AdB-6" value="&lt;font face=&quot;Times New Roman&quot;&gt;Yes&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="kFVHqrrAhFQWBblv3AdB-3" vertex="1" connectable="0">
           <mxGeometry x="-0.8315" relative="1" as="geometry">
-            <mxPoint x="11" as="offset" />
+            <mxPoint x="24" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="kFVHqrrAhFQWBblv3AdB-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="kFVHqrrAhFQWBblv3AdB-1" edge="1">
+        <mxCell id="lWiCxJjzuaAZRDkpksAD-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="kFVHqrrAhFQWBblv3AdB-1" target="kFVHqrrAhFQWBblv3AdB-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lWiCxJjzuaAZRDkpksAD-4" value="&lt;font face=&quot;Times New Roman&quot;&gt;No&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="lWiCxJjzuaAZRDkpksAD-3">
+          <mxGeometry x="-0.7939" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lWiCxJjzuaAZRDkpksAD-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.194;entryY=-0.005;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="kFVHqrrAhFQWBblv3AdB-1" target="lWiCxJjzuaAZRDkpksAD-8">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="400" y="-630" as="targetPoint" />
+            <mxPoint x="130" y="-590" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="kFVHqrrAhFQWBblv3AdB-1" value="&lt;font style=&quot;font-size: 11px;&quot; face=&quot;Times New Roman&quot;&gt;Compliance Claim&lt;/font&gt;" style="strokeWidth=1;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" parent="1" vertex="1">
-          <mxGeometry x="360" y="-790" width="80" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="kFVHqrrAhFQWBblv3AdB-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" parent="1" source="kFVHqrrAhFQWBblv3AdB-2" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="400" y="-670" as="targetPoint" />
-            <mxPoint x="530" y="-800" as="sourcePoint" />
-            <Array as="points">
-              <mxPoint x="530" y="-670" />
-            </Array>
-          </mxGeometry>
+          <mxGeometry x="90" y="-700" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="kFVHqrrAhFQWBblv3AdB-2" value="&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;;&quot;&gt;&lt;font style=&quot;font-size: 11px;&quot;&gt;Notify to Applicant, the bank will honor the claim within five working days. (Go to Step 3)&lt;/font&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;arcSize=9;" parent="1" vertex="1">
-          <mxGeometry x="420" y="-870" width="150" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="kFVHqrrAhFQWBblv3AdB-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="kFVHqrrAhFQWBblv3AdB-1" target="kFVHqrrAhFQWBblv3AdB-5" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="260" y="-750" as="sourcePoint" />
-            <mxPoint x="300" y="-790" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="kFVHqrrAhFQWBblv3AdB-8" value="&lt;font face=&quot;Times New Roman&quot;&gt;No&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="kFVHqrrAhFQWBblv3AdB-4" vertex="1" connectable="0">
-          <mxGeometry x="-0.6314" y="1" relative="1" as="geometry">
-            <mxPoint as="offset" />
-          </mxGeometry>
+          <mxGeometry x="380" y="-870" width="150" height="60" as="geometry" />
         </mxCell>
         <mxCell id="kFVHqrrAhFQWBblv3AdB-5" value="&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;;&quot;&gt;&lt;font style=&quot;font-size: 11px;&quot;&gt;Notify to beneficiary about claim rejection.&lt;/font&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;arcSize=9;" parent="1" vertex="1">
           <mxGeometry x="240" y="-870" width="120" height="60" as="geometry" />
@@ -268,11 +261,17 @@
         <mxCell id="kFVHqrrAhFQWBblv3AdB-23" value="&lt;font style=&quot;font-size: 11px;&quot; face=&quot;Times New Roman&quot;&gt;Start&lt;/font&gt;" style="strokeWidth=1;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" parent="1" vertex="1">
           <mxGeometry x="90" y="-1030" width="80" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="kFVHqrrAhFQWBblv3AdB-24" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;&lt;span style=&quot;text-indent: -24px; line-height: 12.2667px;&quot;&gt;&lt;font style=&quot;&quot; face=&quot;Times New Roman&quot;&gt;1.&lt;/font&gt;&lt;span style=&quot;font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; line-height: normal;&quot;&gt;&lt;font style=&quot;&quot; face=&quot;Times New Roman&quot;&gt;&amp;nbsp;&lt;/font&gt;&lt;/span&gt;&lt;/span&gt;&lt;font style=&quot;&quot; face=&quot;Times New Roman&quot;&gt;&lt;span style=&quot;text-indent: -0.25in; background-color: initial; line-height: 13.8px;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;line-height: 13.8px;&quot;&gt;Customer&lt;br&gt;(Beneficiary) submitted claim against BG/SBLC or through their bank&lt;/span&gt;&lt;/font&gt;&lt;/font&gt;" style="strokeWidth=1;html=1;shape=mxgraph.flowchart.document2;whiteSpace=wrap;size=0.12380966913132549;align=center;" parent="1" vertex="1">
+        <mxCell id="kFVHqrrAhFQWBblv3AdB-24" value="&lt;p style=&quot;padding-left: 10px; padding-right: 10px; padding-top: 0px;&quot;&gt;&lt;font face=&quot;Times New Roman&quot;&gt;&lt;span style=&quot;text-indent: -24px; line-height: 12.2667px;&quot;&gt;1.&lt;span style=&quot;font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; line-height: normal;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;text-indent: -0.25in; background-color: initial; line-height: 13.8px;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;line-height: 13.8px;&quot;&gt;Customer&lt;br&gt;(Beneficiary) submitted claim against BG/SBLC or through their bank&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;" style="strokeWidth=1;html=1;shape=label;whiteSpace=wrap;size=0.12380966913132549;align=center;rounded=1;absoluteArcSize=1;arcSize=14;fontSize=11;" parent="1" vertex="1">
           <mxGeometry x="50" y="-970" width="160" height="80" as="geometry" />
         </mxCell>
         <mxCell id="kFVHqrrAhFQWBblv3AdB-25" value="&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;;&quot;&gt;2. Checking claim letter and supporting doc.&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;arcSize=9;" parent="1" vertex="1">
           <mxGeometry x="50" y="-790" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="lWiCxJjzuaAZRDkpksAD-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" edge="1" parent="1" source="kFVHqrrAhFQWBblv3AdB-25" target="kFVHqrrAhFQWBblv3AdB-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lWiCxJjzuaAZRDkpksAD-8" value="&lt;p style=&quot;text-align: left; padding-left: 20px; padding-bottom: 0px; margin-top: 0px; line-height: 100%; padding-top: 30px;&quot;&gt;&lt;span style=&quot;background-color: initial; text-indent: -24px;&quot;&gt;&lt;font face=&quot;Times New Roman&quot;&gt;3.&amp;nbsp;TFO must check:&lt;/font&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; padding-bottom: 20px; padding-left: 40px; margin-bottom: 0px; margin-left: 0px;&quot;&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;; background-color: initial; font-size: 11px; text-indent: -0.25in;&quot;&gt;Inform senior management about receiving complying claim and will proceed honor the claim&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;; background-color: initial; font-size: 11px;&quot;&gt;Perform BG/SBLC claim in FC system&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;; background-color: initial; font-size: 11px;&quot;&gt;include release marginal deposit/unblock balance/unblock TD and request Branch to close Term Deposit to make payment against claim, and debit fee charge.&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;; background-color: initial; font-size: 11px;&quot;&gt;Prepare TFAS and Debit Advice&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;; background-color: initial; font-size: 11px; line-height: 100%;&quot;&gt;Submit relevant Doc. to next level&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;; background-color: initial; font-size: 11px; line-height: 100%;&quot;&gt;for checking &amp;amp; approving&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;/p&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;arcSize=9;" vertex="1" parent="1">
+          <mxGeometry x="50" y="-580" width="410" height="140" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

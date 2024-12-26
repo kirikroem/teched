@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0" version="25.0.3">
   <diagram name="Page-1" id="K2Ft-GB5REPkYJW7Gnac">
-    <mxGraphModel dx="1226" dy="1776" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1489" dy="1921" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -318,6 +318,9 @@
         <mxCell id="lWiCxJjzuaAZRDkpksAD-27" value="&lt;div&gt;&lt;font face=&quot;Times New Roman&quot;&gt;5. Check and approval&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;; background-color: initial;&quot;&gt;in FC system as per&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;; background-color: initial;&quot;&gt;limit segregation&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-family: &amp;quot;Times New Roman&amp;quot;; background-color: initial;&quot;&gt;and Sign off TFAS&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;spacingLeft=6;spacingRight=6;arcSize=9;" vertex="1" parent="1">
           <mxGeometry x="530" y="-260" width="180" height="80" as="geometry" />
         </mxCell>
+        <mxCell id="lWiCxJjzuaAZRDkpksAD-48" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="lWiCxJjzuaAZRDkpksAD-31" target="lWiCxJjzuaAZRDkpksAD-47">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="lWiCxJjzuaAZRDkpksAD-31" value="&lt;font style=&quot;font-size: 11px;&quot; face=&quot;Times New Roman&quot;&gt;Information&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px;&quot; face=&quot;Times New Roman&quot;&gt;Consistency&lt;/font&gt;&lt;/div&gt;" style="strokeWidth=1;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;spacingLeft=6;spacingRight=6;" vertex="1" parent="1">
           <mxGeometry x="760" y="-260" width="80" height="80" as="geometry" />
         </mxCell>
@@ -339,6 +342,9 @@
         </mxCell>
         <mxCell id="lWiCxJjzuaAZRDkpksAD-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" edge="1" parent="1" source="lWiCxJjzuaAZRDkpksAD-16" target="lWiCxJjzuaAZRDkpksAD-23">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lWiCxJjzuaAZRDkpksAD-47" value="&lt;div&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 11px;&quot;&gt;Debit advice and/or&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 11px;&quot;&gt;Related document​, and Credit Beneficiary&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;spacingLeft=6;spacingRight=6;arcSize=9;" vertex="1" parent="1">
+          <mxGeometry x="900" y="-250" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

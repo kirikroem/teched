@@ -343,8 +343,14 @@
         <mxCell id="lWiCxJjzuaAZRDkpksAD-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" edge="1" parent="1" source="lWiCxJjzuaAZRDkpksAD-16" target="lWiCxJjzuaAZRDkpksAD-23">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="lWiCxJjzuaAZRDkpksAD-51" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="lWiCxJjzuaAZRDkpksAD-47" target="lWiCxJjzuaAZRDkpksAD-50">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="lWiCxJjzuaAZRDkpksAD-47" value="&lt;div&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 11px;&quot;&gt;Debit advice and/or&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 11px;&quot;&gt;Related document​, and Credit Beneficiary&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;spacingLeft=6;spacingRight=6;arcSize=9;" vertex="1" parent="1">
           <mxGeometry x="900" y="-250" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lWiCxJjzuaAZRDkpksAD-50" value="" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;spacingLeft=6;spacingRight=6;arcSize=9;" vertex="1" parent="1">
+          <mxGeometry x="900" y="-980" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

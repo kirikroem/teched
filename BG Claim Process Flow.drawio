@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0" version="25.0.3">
   <diagram name="Page-1" id="K2Ft-GB5REPkYJW7Gnac">
-    <mxGraphModel dx="2316" dy="2378" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1489" dy="1921" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -165,11 +165,11 @@
         <mxCell id="lWiCxJjzuaAZRDkpksAD-65" value="&lt;font face=&quot;Times New Roman&quot;&gt;BG/SBLC Claim&lt;/font&gt;" style="text;strokeColor=none;fillColor=none;html=1;fontSize=24;fontStyle=1;verticalAlign=middle;align=center;" parent="1" vertex="1">
           <mxGeometry x="415" y="-1085" width="210" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="lWiCxJjzuaAZRDkpksAD-70" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" parent="1" vertex="1">
+        <mxCell id="lWiCxJjzuaAZRDkpksAD-70" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
           <mxGeometry y="-1040" width="50" height="880" as="geometry" />
         </mxCell>
         <UserObject label="Applicant/Beneficiary" placeholders="1" name="Variable" id="lWiCxJjzuaAZRDkpksAD-71">
-          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontStyle=1;fontSize=14;rotation=-90;" parent="1" vertex="1">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontStyle=1;fontSize=14;rotation=-90;fontFamily=Times New Roman;" parent="1" vertex="1">
             <mxGeometry x="-61.25" y="-963.75" width="172.5" height="20" as="geometry" />
           </mxCell>
         </UserObject>
@@ -177,22 +177,22 @@
           <mxGeometry x="860" y="-970" width="160" height="90" as="geometry" />
         </mxCell>
         <UserObject label="BO/TFO" placeholders="1" name="Variable" id="xGh8jG_f3CMO887eEB-3-2">
-          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontStyle=1;fontSize=14;rotation=-90;" vertex="1" parent="1">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontStyle=1;fontSize=14;rotation=-90;fontFamily=Times New Roman;" vertex="1" parent="1">
             <mxGeometry x="-26.4" y="-830.77" width="102.81" height="20" as="geometry" />
           </mxCell>
         </UserObject>
         <UserObject label="STFO/TFO" placeholders="1" name="Variable" id="xGh8jG_f3CMO887eEB-3-3">
-          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontStyle=1;fontSize=14;rotation=-90;" vertex="1" parent="1">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontStyle=1;fontSize=14;rotation=-90;fontFamily=Times New Roman;" vertex="1" parent="1">
             <mxGeometry x="-126.59" y="-623.38" width="303.21" height="20" as="geometry" />
           </mxCell>
         </UserObject>
         <UserObject label="TFM/ATFM" placeholders="1" name="Variable" id="xGh8jG_f3CMO887eEB-3-4">
-          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontStyle=1;fontSize=14;rotation=-90;" vertex="1" parent="1">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontStyle=1;fontSize=14;rotation=-90;fontFamily=Times New Roman;" vertex="1" parent="1">
             <mxGeometry x="-58.28" y="-381.69" width="166.59" height="20" as="geometry" />
           </mxCell>
         </UserObject>
         <UserObject label="HOBO" placeholders="1" name="Variable" id="xGh8jG_f3CMO887eEB-3-5">
-          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontStyle=1;fontSize=14;rotation=-90;" vertex="1" parent="1">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontStyle=1;fontSize=14;rotation=-90;fontFamily=Times New Roman;" vertex="1" parent="1">
             <mxGeometry x="-37.28" y="-234.68" width="124.6" height="20" as="geometry" />
           </mxCell>
         </UserObject>

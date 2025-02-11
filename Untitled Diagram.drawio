@@ -84,7 +84,7 @@
         </mxCell>
         <mxCell id="GQJi8FWaUbrm4bYVat67-13" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="GQJi8FWaUbrm4bYVat67-12">
           <mxGeometry x="-0.4519" y="1" relative="1" as="geometry">
-            <mxPoint as="offset" />
+            <mxPoint y="-3" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="cnvuhV0ucwfGlOxxNsax-18" value="Approve?" style="strokeWidth=1;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" parent="1" vertex="1">
@@ -185,7 +185,7 @@
         <mxCell id="GQJi8FWaUbrm4bYVat67-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GQJi8FWaUbrm4bYVat67-35" target="cnvuhV0ucwfGlOxxNsax-42">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GQJi8FWaUbrm4bYVat67-35" value="&lt;ol style=&quot;padding-left: 20px;&quot;&gt;&lt;li&gt;Print company stamp on Original BG letter&lt;/li&gt;&lt;li&gt;Scan BG letter and filing customer&lt;/li&gt;&lt;/ol&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;align=left;" vertex="1" parent="1">
+        <mxCell id="GQJi8FWaUbrm4bYVat67-35" value="&lt;ol style=&quot;padding-left: 20px;&quot;&gt;&lt;li&gt;Print company stamp on Original BG letter&lt;/li&gt;&lt;li&gt;Scan BG letter and filing customer&lt;/li&gt;&lt;/ol&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;align=left;spacingRight=5;" vertex="1" parent="1">
           <mxGeometry x="1118" y="490" width="248" height="80" as="geometry" />
         </mxCell>
         <mxCell id="GQJi8FWaUbrm4bYVat67-43" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;DTFA/HTF&lt;/span&gt;" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;startSize=50;" vertex="1" parent="1">

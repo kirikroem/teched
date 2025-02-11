@@ -1,9 +1,21 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36" version="26.0.11">
   <diagram name="Page-1" id="frO6bIjpAD6LzR3Jj6Uj">
-    <mxGraphModel dx="2100" dy="1130" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1909" dy="1027" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="GQJi8FWaUbrm4bYVat67-47" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;TFO/RM/BO&lt;/span&gt;" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;startSize=50;" vertex="1" parent="1">
+          <mxGeometry y="180" width="1400" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="GQJi8FWaUbrm4bYVat67-46" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;Compliance&lt;/span&gt;" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;startSize=50;" vertex="1" parent="1">
+          <mxGeometry y="320" width="1400" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="GQJi8FWaUbrm4bYVat67-45" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;STF/TFO&lt;/span&gt;" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;startSize=50;" vertex="1" parent="1">
+          <mxGeometry y="460" width="1400" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="GQJi8FWaUbrm4bYVat67-44" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;TFM/ATFM&lt;/span&gt;" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;startSize=50;" vertex="1" parent="1">
+          <mxGeometry y="600" width="1400" height="140" as="geometry" />
+        </mxCell>
         <mxCell id="cnvuhV0ucwfGlOxxNsax-7" value="&lt;ol style=&quot;padding-left: 16px;&quot;&gt;&lt;li&gt;Request supporting docs, company docs, and Wing acct no.&lt;/li&gt;&lt;li&gt;Review docs, conduct KYC and AML Screening.&lt;/li&gt;&lt;/ol&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=1;spacingLeft=6;align=left;spacingRight=6;" parent="1" vertex="1">
           <mxGeometry x="82" y="210" width="280" height="80" as="geometry" />
         </mxCell>
@@ -126,7 +138,7 @@
         <mxCell id="cnvuhV0ucwfGlOxxNsax-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="cnvuhV0ucwfGlOxxNsax-42" target="cnvuhV0ucwfGlOxxNsax-44" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="cnvuhV0ucwfGlOxxNsax-42" value="prepare and facilitate customer to sign application form, draft, acct pledge agreement.&amp;nbsp;&lt;div&gt;Contain approval TFMA, and preapre Approval sheet for TFM.&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=1;align=center;" parent="1" vertex="1">
+        <mxCell id="cnvuhV0ucwfGlOxxNsax-42" value="Contact customer to pick up the Bank Guarantee and debit advice." style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=1;align=center;" parent="1" vertex="1">
           <mxGeometry x="1122" y="210" width="240" height="80" as="geometry" />
         </mxCell>
         <mxCell id="cnvuhV0ucwfGlOxxNsax-66" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="cnvuhV0ucwfGlOxxNsax-44" target="cnvuhV0ucwfGlOxxNsax-62" edge="1">
@@ -173,23 +185,11 @@
         <mxCell id="GQJi8FWaUbrm4bYVat67-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GQJi8FWaUbrm4bYVat67-35" target="cnvuhV0ucwfGlOxxNsax-42">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GQJi8FWaUbrm4bYVat67-35" value="&lt;ol style=&quot;padding-left: 20px;&quot;&gt;&lt;li&gt;Check overdue Trade Bills&lt;/li&gt;&lt;li&gt;Perform screening and account balance&lt;/li&gt;&lt;li&gt;Perform transaction in FC&lt;/li&gt;&lt;li&gt;Prepare TFAS, BG Letter, SWIFT, DA&lt;/li&gt;&lt;/ol&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;align=left;" vertex="1" parent="1">
-          <mxGeometry x="1118" y="480" width="248" height="100" as="geometry" />
+        <mxCell id="GQJi8FWaUbrm4bYVat67-35" value="&lt;ol style=&quot;padding-left: 20px;&quot;&gt;&lt;li&gt;Print company stamp on Original BG letter&lt;/li&gt;&lt;li&gt;Scan BG letter and filing customer&lt;/li&gt;&lt;/ol&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1118" y="490" width="248" height="80" as="geometry" />
         </mxCell>
         <mxCell id="GQJi8FWaUbrm4bYVat67-43" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;DTFA/HTF&lt;/span&gt;" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;startSize=50;" vertex="1" parent="1">
           <mxGeometry y="740" width="1400" height="140" as="geometry" />
-        </mxCell>
-        <mxCell id="GQJi8FWaUbrm4bYVat67-44" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;TFM/ATFM&lt;/span&gt;" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;startSize=50;" vertex="1" parent="1">
-          <mxGeometry y="600" width="1400" height="140" as="geometry" />
-        </mxCell>
-        <mxCell id="GQJi8FWaUbrm4bYVat67-45" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;STF/TFO&lt;/span&gt;" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;startSize=50;" vertex="1" parent="1">
-          <mxGeometry y="460" width="1400" height="140" as="geometry" />
-        </mxCell>
-        <mxCell id="GQJi8FWaUbrm4bYVat67-46" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;Compliance&lt;/span&gt;" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;startSize=50;" vertex="1" parent="1">
-          <mxGeometry y="320" width="1400" height="140" as="geometry" />
-        </mxCell>
-        <mxCell id="GQJi8FWaUbrm4bYVat67-47" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;TFO/RM/BO&lt;/span&gt;" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;startSize=50;" vertex="1" parent="1">
-          <mxGeometry y="180" width="1400" height="140" as="geometry" />
         </mxCell>
         <mxCell id="GQJi8FWaUbrm4bYVat67-48" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;Customer&lt;/span&gt;" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;startSize=50;" vertex="1" parent="1">
           <mxGeometry y="10" width="1400" height="170" as="geometry" />

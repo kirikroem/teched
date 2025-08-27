@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Excel → ICS Converter (Local Time, No 1970 Bug)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 24px; color: #0f172a; background:#f8fafc; }
+    .card { background:#fff; border-radius:16px; padding:20px; box-shadow:0 2px 16px rgba(2,6,23,.06); max-width:900px; }
+    h1 { font-size: 20px; margin: 0 0 12px; }
+    label { font-size: 14px; color:#334155; display:block; margin-bottom:6px; }
+    input[type=file] { width: 100%; }
+    button { background:#2563eb; color:#fff; border:0; padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600; }
+    button:disabled { background:#94a3b8; cursor:not-allowed; }
+    .row { display:flex; gap:12px; align-items:center; }
+    .muted { color:#64748b; font-size:12px; }
+    pre { background:#0b1220; color:#e2e8f0; padding:12px; border-radius:12px; overflow:auto; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th, td { padding:8px; border-bottom:1px solid #e2e8f0; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
+    th { text-align:left; background:#f1f5f9; }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div class="card">
+    <h1>Excel → ICS Converter</h1>
+    <p class="muted">This version locks to your headers: <strong>Subject</strong>, <strong>StartDate</strong>, <strong>StartTime</strong>, <strong>EndTime</strong>, <strong>Location</strong>, <strong>Description</strong>. (No <code>EndDate</code> in your sheet → it will use <code>StartDate</code>.) Times are exported as <em>local times</em> (no trailing Z), matching your sample (e.g., <code>DTSTART:20251225T080000</code>).</p>
+
+    <div class="row" style="margin:12px 0 16px;">
+      <label for="file">Upload Excel (.xlsx, .xls)</label>
+      <input id="file" type="file" accept=".xlsx,.xls" />
+      <button id="go" disabled>Generate & Download .ics</button>
+    </div>
+
+    <div id="previewWrap" style="display:none; margin-top:12px;">
+      <div class="muted" style="margin-bottom:6px;">Preview (first 10 rows):</div>
+      <div style="max-height:260px; overflow:auto; border:1px solid #e2e8f0; border-radius:12px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>StartDate</th>
+              <th>StartTime</th>
+              <th>EndTime</th>
+              <th>Location</th>
+              <th>Description</th>
+              <th>DTSTART (local)</th>
+              <th>DTEND (local)</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <div class="muted">Log</div>
+      <pre id="log">Waiting for file…</pre>
+    </div>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('file');
+    const goBtn = document.getElementById('go');
+    const logEl = document.getElementById('log');
+    const previewWrap = document.getElementById('previewWrap');
+    const tbody = document.getElementById('tbody');
+
+    fileInput.addEventListener('change', () => {
+      goBtn.disabled = !fileInput.files.length;
+      logEl.textContent = fileInput.files.length ? 'File ready. Click "Generate" to export.' : 'Waiting for file…';
+      if (fileInput.files.length) buildPreview();
+    });
+
+    goBtn.addEventListener('click', async () => {
+      const rows = await loadRows();
+      if (!rows.length) { logEl.textContent = 'No data rows found.'; return; }
+      const ics = buildICS(rows);
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'calendar.ics';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      logEl.textContent = 'ICS file generated successfully.';
+    });
+
+    async function loadRows() {
+      const file = fileInput.files[0];
+      const data = await file.arrayBuffer();
+      const wb = XLSX.read(data, { type: 'array' });
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      return XLSX.utils.sheet_to_json(sheet, { defval: '' });
+    }
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    // --- Excel helpers (no more 1970 bug) ---
+    function excelSerialToYMD(serial) {
+      // Convert Excel serial date to Y/M/D, treating the date as a local calendar date (no TZ shift)
+      const base = Date.UTC(1899, 11, 30); // Excel epoch 1899-12-30
+      const ms = base + Math.floor(serial) * 86400000;
+      const d = new Date(ms);
+      return { y: d.getUTCFullYear(), m: d.getUTCMonth() + 1, day: d.getUTCDate() };
+    }
+
+    function parseDateCell(cell) {
+      if (cell === '' || cell == null) return null;
+      if (typeof cell === 'number') {
+        const { y, m, day } = excelSerialToYMD(cell);
+        return { y, m, day };
+        
+      } else {
+        // Try to parse as date string (yyyy-mm-dd, dd/mm/yyyy, etc.) using JS Date
+        const d = new Date(cell);
+        if (!isNaN(d.getTime())) {
+          return { y: d.getFullYear(), m: d.getMonth() + 1, day: d.getDate() };
+        }
+      }
+      return null;
+    }
+
+    function parseTimeCell(cell) {
+      if (cell === '' || cell == null) return { H: 0, M: 0, S: 0 };
+      if (typeof cell === 'number') {
+        const seconds = Math.round(86400 * (cell % 1));
+        const H = Math.floor(seconds / 3600);
+        const M = Math.floor((seconds % 3600) / 60);
+        const S = seconds % 60;
+        return { H, M, S };
+      }
+      if (typeof cell === 'string') {
+        const s = cell.trim();
+        // Support HH:MM, HH:MM:SS, h:mm AM/PM
+        const m = s.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?$/i);
+        if (m) {
+          let H = parseInt(m[1], 10);
+          const M = parseInt(m[2] || '0', 10);
+          const S = parseInt(m[3] || '0', 10);
+          const ap = (m[4] || '').toUpperCase();
+          if (ap === 'AM' && H === 12) H = 0;
+          if (ap === 'PM' && H < 12) H += 12;
+          return { H, M, S };
+        }
+      }
+      return { H: 0, M: 0, S: 0 };
+    }
+
+    function formatICSLcl(y, m, day, H = 0, M = 0, S = 0) {
+      // Local time format without Z, e.g., 20251225T080000
+      return `${y}${pad(m)}${pad(day)}T${pad(H)}${pad(M)}${pad(S)}`;
+    }
+
+    function escapeICS(text = '') {
+      return String(text)
+        .replace(/\\/g, "\\\\")
+        .replace(/\n/g, "\\n")
+        .replace(/,/g, "\\,")
+        .replace(/;/g, "\\;");
+    }
+
+    function slugify(s) {
+      return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 32) || 'event';
+    }
+
+    function addHour(y, m, d, H, M, S) {
+      const dt = new Date(y, m - 1, d, H, M, S);
+      dt.setHours(dt.getHours() + 1);
+      return { y: dt.getFullYear(), m: dt.getMonth() + 1, day: dt.getDate(), H: dt.getHours(), M: dt.getMinutes(), S: dt.getSeconds() };
+    }
+
+    function buildICS(rows) {
+      const lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Microsoft Copilot//EN'
+      ];
+
+      const dtstamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+      rows.forEach((row, i) => {
+        const title = row['Subject'] || `Event ${i+1}`;
+        const desc = row['Description'] || '';
+        const loc = row['Location'] || '';
+        const dStart = parseDateCell(row['StartDate']);
+        const tStart = parseTimeCell(row['StartTime']);
+        const tEnd   = parseTimeCell(row['EndTime']);
+
+        if (!dStart) return; // skip if no start date
+
+        const DTSTART = formatICSLcl(dStart.y, dStart.m, dStart.day, tStart.H, tStart.M, tStart.S);
+
+        // If EndTime provided, use same StartDate; else default +1 hour from DTSTART
+        let y2, m2, d2, H2, M2, S2;
+        if (row['EndTime'] !== '' && row['EndTime'] != null) {
+          y2 = dStart.y; m2 = dStart.m; d2 = dStart.day; ({ H: H2, M: M2, S: S2 } = tEnd);
+        } else {
+          ({ y: y2, m: m2, day: d2, H: H2, M: M2, S: S2 } = addHour(dStart.y, dStart.m, dStart.day, tStart.H, tStart.M, tStart.S));
+        }
+        const DTEND = formatICSLcl(y2, m2, d2, H2, M2, S2);
+
+        const uid = `${DTSTART}-${slugify(title)}@copilot`;
+
+        lines.push('BEGIN:VEVENT');
+        lines.push(`UID:${uid}`);
+        lines.push(`DTSTAMP:${dtstamp}`); // keep UTC Z for stamp
+        lines.push(`DTSTART:${DTSTART}`); // local time, no Z (matches your sample)
+        lines.push(`DTEND:${DTEND}`);     // local time, no Z
+        lines.push(`SUMMARY:${escapeICS(title)}`);
+        if (loc)  lines.push(`LOCATION:${escapeICS(loc)}`);
+        if (desc) lines.push(`DESCRIPTION:${escapeICS(desc)}`);
+        lines.push('END:VEVENT');
+      });
+
+      lines.push('END:VCALENDAR');
+      return lines.join('\r\n');
+    }
+
+    async function buildPreview() {
+      const rows = await loadRows();
+      if (!rows.length) { previewWrap.style.display = 'none'; return; }
+      tbody.innerHTML = '';
+      rows.slice(0, 10).forEach((row, i) => {
+        const dStart = parseDateCell(row['StartDate']);
+        const tStart = parseTimeCell(row['StartTime']);
+        const tEnd   = parseTimeCell(row['EndTime']);
+        if (!dStart) return;
+        const DTSTART = formatICSLcl(dStart.y, dStart.m, dStart.day, tStart.H, tStart.M, tStart.S);
+        let y2, m2, d2, H2, M2, S2;
+        if (row['EndTime'] !== '' && row['EndTime'] != null) {
+          y2 = dStart.y; m2 = dStart.m; d2 = dStart.day; ({ H: H2, M: M2, S: S2 } = tEnd);
+        } else {
+          ({ y: y2, m: m2, day: d2, H: H2, M: M2, S: S2 } = addHour(dStart.y, dStart.m, dStart.day, tStart.H, tStart.M, tStart.S));
+        }
+        const DTEND = formatICSLcl(y2, m2, d2, H2, M2, S2);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row['Subject'] || ''}</td>
+          <td>${row['StartDate'] || ''}</td>
+          <td>${row['StartTime'] || ''}</td>
+          <td>${row['EndTime'] || ''}</td>
+          <td>${row['Location'] || ''}</td>
+          <td>${row['Description'] || ''}</td>
+          <td>${DTSTART}</td>
+          <td>${DTEND}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+      previewWrap.style.display = '';
+    }
+  </script>
+</body>
+</html>

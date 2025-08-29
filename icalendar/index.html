@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Excel → ICS Converter (Drag & Drop, Fixed Browse)</title>
+  <style>
+    :root { color-scheme: light; }
+    body { font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin:24px; color:#0f172a; background:#f8fafc; }
+    .card { background:#fff; border-radius:16px; padding:20px; box-shadow:0 2px 16px rgba(2,6,23,.06); max-width:960px; margin:auto; }
+    h1 { font-size:20px; margin:0 0 12px; }
+    button { background:#2563eb; color:#fff; border:0; padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600; }
+    button:disabled { background:#94a3b8; cursor:not-allowed; }
+    .muted { color:#64748b; font-size:12px; }
+    pre { background:#0b1220; color:#e2e8f0; padding:12px; border-radius:12px; overflow:auto; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th, td { padding:8px; border-bottom:1px solid #e2e8f0; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
+    th { text-align:left; background:#f1f5f9; }
+
+    /* Upload box */
+    .upload-box { border:2px dashed #94a3b8; border-radius:12px; padding:40px 20px; text-align:center; color:#475569; cursor:pointer; transition:border-color .2s, background .2s; }
+    .upload-box.dragover { border-color:#2563eb; background:#eff6ff; }
+    .upload-box input[type=file] { display:none; }
+    .browse-btn { display:inline-block; margin-top:10px; padding:8px 14px; border-radius:8px; border:1px solid #2563eb; background:#fff; color:#2563eb; font-size:14px; font-weight:600; cursor:pointer; }
+  </style>
+
+  <!-- xlsx library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div class="card">
+    <h1>Excel → ICS Converter</h1>
+    <p class="muted">Headers required: <strong>Subject</strong>, <strong>StartDate</strong>, <strong>StartTime</strong>, <strong>EndTime</strong>, <strong>Location</strong>, <strong>Description</strong>. Times export as <em>local times</em> (no trailing Z).</p>
+
+    <!-- Upload area -->
+    <div id="uploadBox" class="upload-box" role="button" tabindex="0" aria-label="Upload Excel file by drag & drop or browse">
+      <div>☁️ <strong>Drag & Drop</strong> files here</div>
+      <div class="muted">or</div>
+      <label class="browse-btn" for="fileInput">Browse Files</label>
+      <input id="fileInput" type="file" accept=".xlsx,.xls" />
+    </div>
+
+    <div style="margin:16px 0; display:flex; gap:12px; align-items:center;">
+      <button id="go" disabled>Generate & Download .ics</button>
+      <span id="fileName" class="muted"></span>
+    </div>
+
+    <div id="previewWrap" style="display:none; margin-top:12px;">
+      <div class="muted" style="margin-bottom:6px;">Preview (first 10 rows):</div>
+      <div style="max-height:260px; overflow:auto; border:1px solid #e2e8f0; border-radius:12px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Date</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Location</th>
+              <th>Description</th>
+              <th>DTSTART (ICS)</th>
+              <th>DTEND (ICS)</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <div class="muted">Log</div>
+      <pre id="log">Waiting for file…</pre>
+    </div>
+  </div>
+
+  <script>
+    const uploadBox = document.getElementById('uploadBox');
+    const fileInput = document.getElementById('fileInput');
+    const goBtn = document.getElementById('go');
+    const logEl = document.getElementById('log');
+    const previewWrap = document.getElementById('previewWrap');
+    const tbody = document.getElementById('tbody');
+    const fileNameEl = document.getElementById('fileName');
+    let currentFile = null;
+
+    ['dragenter','dragover'].forEach(evt => uploadBox.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); uploadBox.classList.add('dragover'); }));
+    ['dragleave','drop'].forEach(evt => uploadBox.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); uploadBox.classList.remove('dragover'); }));
+    uploadBox.addEventListener('drop', e => {
+      const files = e.dataTransfer && e.dataTransfer.files ? e.dataTransfer.files : null;
+      if (!files || !files.length) return;
+      setFile(files[0]);
+    });
+
+    uploadBox.addEventListener('click', (e) => {
+      if (e.target === uploadBox) {
+        fileInput.value = null;
+        fileInput.click();
+      }
+    });
+    uploadBox.addEventListener('keydown', (e) => {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target === uploadBox) {
+        e.preventDefault();
+        fileInput.value = null;
+        fileInput.click();
+      }
+    });
+    fileInput.addEventListener('click', () => { fileInput.value = null; });
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files && fileInput.files.length) {
+        setFile(fileInput.files[0]);
+      }
+    });
+
+    function setFile(file) {
+      currentFile = file;
+      fileNameEl.textContent = file ? file.name : '';
+      goBtn.disabled = !file;
+      logEl.textContent = file ? 'File ready. Click "Generate" to export.' : 'Waiting for file…';
+      if (file) {
+        buildPreview().catch(err => { console.error(err); logEl.textContent = 'Failed to read file.'; });
+      }
+    }
+
+    goBtn.addEventListener('click', async () => {
+      try {
+        if (!currentFile) { alert('Please upload an Excel file first.'); return; }
+        const rows = await loadRows();
+        if (!rows.length) { logEl.textContent = 'No data rows found.'; return; }
+        const ics = buildICS(rows);
+        const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'calendar.ics';
+        document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+        logEl.textContent = 'ICS file generated successfully.';
+      } catch (err) {
+        console.error(err);
+        logEl.textContent = 'Error generating ICS. See console for details.';
+      }
+    });
+
+    async function loadRows() {
+      const data = await currentFile.arrayBuffer();
+      const wb = XLSX.read(data, { type: 'array' });
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      return XLSX.utils.sheet_to_json(sheet, { defval: '' });
+    }
+
+    function pad(n){ return String(n).padStart(2,'0'); }
+    const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    function excelSerialToYMD(serial){
+      const base = Date.UTC(1899,11,30);
+      const ms = base + Math.floor(serial) * 86400000;
+      const d = new Date(ms);
+      return { y:d.getUTCFullYear(), m:d.getUTCMonth()+1, day:d.getUTCDate() };
+    }
+
+    function parseDateCell(cell){
+      if (cell === '' || cell == null) return null;
+      if (typeof cell === 'number') return excelSerialToYMD(cell);
+      const d = new Date(cell);
+      if (!isNaN(d.getTime())) return { y:d.getFullYear(), m:d.getMonth()+1, day:d.getDate() };
+      return null;
+    }
+
+    function parseTimeCell(cell){
+      if (cell === '' || cell == null) return { H:0, M:0, S:0 };
+      if (typeof cell === 'number'){
+        const seconds = Math.round(86400 * (cell % 1));
+        return { H:Math.floor(seconds/3600), M:Math.floor((seconds%3600)/60), S:seconds%60 };
+      }
+      if (typeof cell === 'string'){
+        const s = cell.trim();
+        const m = s.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?$/i);
+        if (m){
+          let H = parseInt(m[1],10), M = parseInt(m[2]||'0',10), S = parseInt(m[3]||'0',10);
+          const ap = (m[4]||'').toUpperCase();
+          if (ap === 'AM' && H === 12) H = 0;
+          if (ap === 'PM' && H < 12) H += 12;
+          return { H, M, S };
+        }
+      }
+      return { H:0, M:0, S:0 };
+    }
+
+    function formatICSLcl(y,m,d,H=0,M=0,S=0){
+      return `${y}${pad(m)}${pad(d)}T${pad(H)}${pad(M)}${pad(S)}`;
+    }
+
+    function humanDate(y,m,d){
+      return `${pad(d)} ${MONTH_ABBR[m-1]} ${y}`;
+    }
+
+    function humanTime(H,M){
+      const ap = (H>=12) ? 'PM' : 'AM';
+      const hh = ((H%12)||12);
+      return `${pad(hh)}:${pad(M)} ${ap}`;
+    }
+
+    function addHour(y,m,d,H,M,S){
+      const dt = new Date(y, m-1, d, H, M, S);
+      dt.setHours(dt.getHours()+1);
+      return { y:dt.getFullYear(), m:dt.getMonth()+1, day:dt.getDate(), H:dt.getHours(), M:dt.getMinutes(), S:dt.getSeconds() };
+    }
+
+    function adjustEndSameOrNextDay(dStart, tStart, tEnd){
+      const startSec = tStart.H*3600 + tStart.M*60 + tStart.S;
+      const endSec = tEnd.H*3600 + tEnd.M*60 + tEnd.S;
+      if (endSec >= startSec) return { y:dStart.y, m:dStart.m, day:dStart.day, H:tEnd.H, M:tEnd.M, S:tEnd.S };
+      const dt = new Date(dStart.y, dStart.m-1, dStart.day, tEnd.H, tEnd.M, tEnd.S);
+      dt.setDate(dt.getDate()+1);
+      return { y:dt.getFullYear(), m:dt.getMonth()+1, day:dt.getDate(), H:dt.getHours(), M:dt.getMinutes(), S:dt.getSeconds() };
+    }
+
+    function escapeICS(text=''){ return String(text).replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;'); }
+    function slugify(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'').slice(0,32) || 'event'; }
+
+    function buildICS(rows){
+      const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//TechEd Cambodia//EN'];
+      const dtstamp = new Date().toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+      rows.forEach((row,i)=>{
+        const title = row['Subject'] || `Event ${i+1}`;
+        const desc  = row['Description'] || '';
+        const loc   = row['Location'] || '';
+        const dStart = parseDateCell(row['StartDate']);
+        const tStart = parseTimeCell(row['StartTime']);
+        if (!dStart) return;
+
+        const DTSTART = formatICSLcl(dStart.y,dStart.m,dStart.day,tStart.H,tStart.M,tStart.S);
+
+        let endParts;
+        if (row['EndTime']) {
+          const tEnd = parseTimeCell(row['EndTime']);
+          endParts = adjustEndSameOrNextDay(dStart, tStart, tEnd);
+        } else {
+          endParts = addHour(dStart.y,dStart.m,dStart.day,tStart.H,tStart.M,tStart.S);
+        }
+        const DTEND = formatICSLcl(endParts.y,endParts.m,endParts.day,endParts.H,endParts.M,endParts.S);
+
+        const uid = `${DTSTART}-${slugify(title)}@teched`;
+
+        lines.push('BEGIN:VEVENT',
+          `UID:${uid}`,
+          `DTSTAMP:${dtstamp}`,
+          `DTSTART:${DTSTART}`,
+          `DTEND:${DTEND}`,
+          `SUMMARY:${escapeICS(title)}`
+        );
+        if (loc) lines.push(`LOCATION:${escapeICS(loc)}`);
+        if (desc) lines.push(`DESCRIPTION:${escapeICS(desc)}`);
+        lines.push('END:VEVENT');
+      });
+      lines.push('END:VCALENDAR');
+      return lines.join('\r\n');
+    }
+
+    async function buildPreview(){
+      const rows = await loadRows();
+      if (!rows.length) { previewWrap.style.display='none'; return; }
+      tbody.innerHTML = '';
+      rows.slice(0,10).forEach((row)=>{
+        const dStart = parseDateCell(row['StartDate']);
+        const tStart = parseTimeCell(row['StartTime']);
+        if (!dStart) return;
+        const DTSTART = formatICSLcl(dStart.y,dStart.m,dStart.day,tStart.H,tStart.M,tStart.S);
+
+        let endParts;
+        if (row['EndTime']) {
+          const tEnd = parseTimeCell(row['EndTime']);
+          endParts = adjustEndSameOrNextDay(dStart, tStart, tEnd);
+        } else {
+          endParts = addHour(dStart.y,dStart.m,dStart.day,tStart.H,tStart.M,tStart.S);
+        }
+        const DTEND = formatICSLcl(endParts.y,endParts.m,endParts.day,endParts.H,endParts.M,endParts.S);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row['Subject']||''}</td>
+          <td>${humanDate(dStart.y,dStart.m,dStart.day)}</td>
+          <td>${humanTime(tStart.H,tStart.M)}</td>
+          <td>${humanTime(endParts.H,endParts.M)}</td>
+          <td>${row['Location']||''}</td>
+          <td>${row['Description']||''}</td>
+          <td>${DTSTART}</td>
+          <td>${DTEND}</td>`;
+        tbody.appendChild(tr);
+      });
+      previewWrap.style.display = '';
+    }
+  </script>
+</body>
+</html>

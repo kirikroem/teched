@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy EMI Calculator</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Apply the Inter font globally */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7; /* Very light background matching prototype */
+        }
+        /* Custom colors for the design */
+        .primary-color {
+            color: #6d28d9; /* A bright purple/indigo accent */
+        }
+        .bg-primary {
+            background-color: #6d28d9;
+        }
+        .bg-primary:hover {
+            background-color: #5b21aa;
+        }
+        /* Segmented control styling */
+        .toggle-active {
+            background-color: white;
+            color: #6d28d9;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            font-weight: 600;
+        }
+        .toggle-inactive {
+            background-color: transparent;
+            color: #6d28d9;
+            opacity: 0.7;
+            font-weight: 500;
+        }
+        /* Custom input style to match the prototype's light grey containers */
+        .input-container {
+            background-color: #f0f0f0;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            
+        }
+
+        /* Remove number input spin buttons (up/down arrows) */
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        
+        /* Ensure inputs take up full width inside container */
+        .input-container input {
+            width: 100%;
+        }
+        
+        /* Specific styling for the table within the details modal */
+        #details-modal table {
+            border-collapse: separate;
+            border-spacing: 0 0.5rem; /* Add some vertical space between rows */
+        }
+        #details-modal thead {
+             /* Sticky header for long tables */
+             z-index: 10;
+        }
+
+        /* Styling for amortization table columns */
+        .col-month {
+            width: 5%; /* FURTHER NARROWED: Reduced from 8% to 5% */
+        }
+        .col-financial {
+            width: 31.66%; /* ADJUSTED: Increased from 30.66% to balance the reduction in col-month */
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6">
+    <div class="max-w-md mx-auto">
+        <!-- Header -->
+        <header class="flex justify-start py-4 mb-6">
+            <h1 class="text-3xl font-bold primary-color">Easy EMI</h1>
+        </header>
+
+        <!-- Input Fields -->
+        <div id="input-section">
+            
+            <!-- Loan Amount Input -->
+            <label for="loanAmount" class="text-sm font-medium primary-color block mb-1">Loan Amount</label>
+            <div class="input-container mb-4">
+                <div class="flex items-center">
+                    <!-- Currency symbol span is now clickable -->
+                    <span id="currency-symbol-span" class="text-xl primary-color mr-1 cursor-pointer" onclick="showCurrencyModal()">$</span>
+                    <!-- Input uses type="text" + inputmode="numeric" -->
+                    <input type="text" id="loanAmount" value="" class="text-xl bg-transparent focus:outline-none" 
+                           placeholder="0" 
+                           onfocus="unformatLoanAmount(this)" 
+                           onblur="formatLoanAmount(this)"
+                           inputmode="numeric">
+                </div>
+            </div>
+
+            <!-- Rate of Interest Input -->
+            <label for="rateOfInterest" class="text-sm font-medium primary-color block mb-1">Rate of Interest (%)</label>
+            <div class="input-container mb-4">
+                <input type="number" id="rateOfInterest" value="" class="text-xl bg-transparent focus:outline-none" placeholder="0" step="0.1">
+            </div>
+
+            <!-- Period Input & Toggle -->
+            <div class="flex items-end gap-4 mb-6">
+                <!-- Period Input -->
+                <div class="flex-grow">
+                    <label for="period" class="text-sm font-medium primary-color block mb-1">Period</label>
+                    <div class="input-container m-0">
+                        <input type="number" id="period" value="" class="text-xl bg-transparent focus:outline-none" placeholder="0">
+                    </div>
+                </div>
+                
+                <!-- Toggle (Year/Month) -->
+                <div class="flex flex-shrink-0 p-1 bg-gray-200 rounded-xl text-sm font-medium primary-color h-14">
+                    <button id="toggle-year" data-unit="year" class="px-3 py-2 rounded-lg transition-colors toggle-inactive">Year</button>
+                    <button id="toggle-month" data-unit="month" class="px-3 py-2 rounded-lg transition-colors toggle-active">Month</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4 mb-8">
+            <button id="calculate-btn" class="flex-1 bg-primary text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
+                CALCULATE
+            </button>
+            <button id="reset-btn" class="flex-1 bg-gray-400 text-white font-semibold py-3 rounded-xl shadow-md hover:bg-gray-500 transition-colors">
+                RESET
+            </button>
+        </div>
+
+        <!-- Result Card -->
+        <div id="result-card" class="bg-white p-6 rounded-3xl shadow-xl transition-all duration-300 hidden">
+            <div class="flex justify-between items-start mb-6">
+                <!-- Monthly EMI -->
+                <div class="flex flex-col">
+                    <span id="monthly-emi" class="text-4xl font-extrabold primary-color"></span>
+                    <span class="text-sm text-gray-500 mt-1">Monthly EMI</span>
+                </div>
+                <!-- Copy Icon -->
+                <svg id="copy-emi-btn" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 cursor-pointer hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5v2m3-2v2m3-2v2"/>
+                </svg>
+            </div>
+
+            <!-- Total Details -->
+            <div class="flex justify-between border-t border-gray-100 pt-4">
+                <div class="text-center w-1/2 pr-2">
+                    <span id="total-interest" class="text-lg font-bold text-gray-700"></span>
+                    <p class="text-xs text-gray-500">Total Interest</p>
+                </div>
+                <div class="text-center w-1/2 pl-2 border-l border-gray-100">
+                    <span id="total-payment" class="text-lg font-bold text-gray-700"></span>
+                    <p class="text-xs text-gray-500">Total Payment</p>
+                </div>
+            </div>
+
+            <!-- Details Button -->
+            <button id="details-btn" class="w-full mt-6 bg-primary/10 text-primary font-semibold py-3 rounded-xl hover:bg-primary/20 transition-colors">
+                DETAILS
+            </button>
+        </div>
+        
+        <!-- Currency Selection Modal -->
+        <div id="currency-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50" onclick="hideCurrencyModal()">
+            <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full h-3/4 flex flex-col" onclick="event.stopPropagation()">
+                <h3 class="text-xl font-semibold primary-color mb-4">Select Currency</h3>
+                <div id="currency-list" class="overflow-y-auto space-y-2 flex-grow pb-4">
+                    <!-- Currency items will be injected here by JS -->
+                </div>
+                <button onclick="hideCurrencyModal()" class="w-full bg-primary text-white py-2 rounded-lg mt-4">Done</button>
+            </div>
+        </div>
+
+        <!-- EMI Details Modal (Amortization Schedule) -->
+        <div id="details-modal" class="fixed inset-0 bg-white hidden flex-col z-50 transition-all duration-300">
+            <header class="p-4 flex items-center justify-between shadow-md">
+                <!-- Close Button (styled the same as the header color) -->
+                <svg id="close-details-btn" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 primary-color cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                <h2 class="text-xl font-bold primary-color">EMI Details</h2>
+                <!-- Copy Icon for Details -->
+                <svg id="copy-details-btn" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 cursor-pointer hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5v2m3-2v2m3-2v2"/>
+                </svg>
+            </header>
+            
+            <div class="p-4 overflow-y-auto flex-grow max-w-lg mx-auto w-full">
+                <!-- Summary Section -->
+                <div class="text-center mb-6">
+                    <span class="text-xs text-gray-500 block">Monthly EMI</span>
+                    <span id="details-monthly-emi" class="text-3xl font-extrabold primary-color block mb-2"></span>
+                    <p class="text-sm text-gray-500 mb-4">at <span id="details-rate"></span>% interest for <span id="details-period-months"></span> months</p>
+                    
+                    <div class="flex justify-around text-center border-y border-gray-100 py-3">
+                        <div>
+                            <span id="details-loan-amount" class="text-sm font-bold text-gray-700 block"></span>
+                            <p class="text-xs text-gray-500">Loan Amount</p>
+                        </div>
+                        <div>
+                            <span id="details-total-interest" class="text-sm font-bold text-gray-700 block"></span>
+                            <p class="text-xs text-gray-500">Total Interest</p>
+                        </div>
+                        <div>
+                            <span id="details-total-payment" class="text-sm font-bold text-gray-700 block"></span>
+                            <p class="text-xs text-gray-500">Total Payment</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Amortization Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="sticky top-0 bg-gray-50">
+                            <tr>
+                                <th class="py-2 px-1 text-left text-xs font-semibold text-gray-600 col-month">Month</th>
+                                <th class="py-2 px-1 text-right text-xs font-semibold text-gray-600 col-financial">Principal (<span class="currency-symbol-table">₹</span>)</th>
+                                <th class="py-2 px-1 text-right text-xs font-semibold text-gray-600 col-financial">Interest (<span class="currency-symbol-table">₹</span>)</th>
+                                <th class="py-2 px-1 text-right text-xs font-semibold text-gray-600 col-financial">Balance (<span class="currency-symbol-table">₹</span>)</th>
+                            </tr>
+                        </thead>
+                        <!-- Changed font size in the class below from 'text-sm' to remove the constraint and use 'text-sm' inside the loop -->
+                        <tbody id="amortization-table-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Rows will be dynamically inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Global Constants & Elements
+        const LOAN_AMOUNT_INPUT = document.getElementById('loanAmount');
+        const RATE_INPUT = document.getElementById('rateOfInterest');
+        const PERIOD_INPUT = document.getElementById('period');
+        const TOGGLE_YEAR = document.getElementById('toggle-year');
+        const TOGGLE_MONTH = document.getElementById('toggle-month');
+        const CALCULATE_BTN = document.getElementById('calculate-btn');
+        const RESET_BTN = document.getElementById('reset-btn');
+        const RESULT_CARD = document.getElementById('result-card');
+        const MONTHLY_EMI_SPAN = document.getElementById('monthly-emi');
+        const TOTAL_INTEREST_SPAN = document.getElementById('total-interest');
+        const TOTAL_PAYMENT_SPAN = document.getElementById('total-payment');
+        const COPY_EMI_BTN = document.getElementById('copy-emi-btn');
+        const CURRENCY_SYMBOL_SPAN = document.getElementById('currency-symbol-span');
+        const CURRENCY_MODAL = document.getElementById('currency-modal');
+        const CURRENCY_LIST = document.getElementById('currency-list');
+        // Details Modal Elements
+        const DETAILS_MODAL = document.getElementById('details-modal');
+        const CLOSE_DETAILS_BTN = document.getElementById('close-details-btn');
+        const DETAILS_BTN = document.getElementById('details-btn');
+        const COPY_DETAILS_BTN = document.getElementById('copy-details-btn');
+
+        // State variables
+        let periodUnit = 'month'; // 'month' or 'year', defaults to 'month'
+        let currentCurrency = { symbol: '$', code: 'USD', name: 'US Dollar' }; 
+        let isCalculated = false; // Tracks if the calculation has been performed once
+
+        // List of supported currencies
+        const currencies = [
+            { symbol: '$', code: 'USD', name: 'US Dollar' },
+            { symbol: '₹', code: 'INR', name: 'Indian Rupee' },
+            { symbol: '€', code: 'EUR', name: 'Euro' },
+            { symbol: '£', code: 'GBP', name: 'British Pound' },
+            { symbol: '¥', code: 'JPY', name: 'Japanese Yen' },
+            { symbol: 'C$', code: 'CAD', name: 'Canadian Dollar' },
+            { symbol: 'A$', code: 'AUD', name: 'Australian Dollar' },
+            { symbol: '฿', code: 'THB', name: 'Thai Baht' },
+            { symbol: '₩', code: 'KRW', name: 'South Korean Won' },
+            { symbol: '៛', code: 'KHR', name: 'Cambodian Riel' },
+            { symbol: '₫', code: 'VND', name: 'Vietnamese Đồng' },
+        ];
+        
+        // --- Input Formatting Utilities ---
+        
+        // Parses formatted string (e.g., "66,000.00") back to a raw number (e.g., 66000)
+        const parseLoanAmount = (value) => {
+            // Remove all non-digit characters except the decimal point
+            const rawValue = value.toString().replace(/[^0-9.]/g, '');
+            return parseFloat(rawValue);
+        };
+
+        // Formats a raw number value into a locale-aware string with 2 decimal places (e.g., 66000 -> "66,000.00")
+        const formatInputNumber = (value) => {
+             // Enforce 2 decimal places for the number representation
+             const number = parseFloat(value).toFixed(2);
+             
+             // Use Intl.NumberFormat for standard decimal formatting and thousands separation
+             return new Intl.NumberFormat('en-US', { 
+                 minimumFractionDigits: 2, 
+                 maximumFractionDigits: 2 
+             }).format(number);
+        };
+        
+        // Handlers for onfocus and onblur on the Loan Amount input field
+        const unformatLoanAmount = (inputElement) => {
+            // Remove formatting when focusing to allow easy typing (get raw number)
+            const rawValue = parseLoanAmount(inputElement.value);
+            
+            // If the field is blank or parsed to 0, clear it completely to allow fresh input.
+            if (isNaN(rawValue) || rawValue === 0) {
+                inputElement.value = '';
+            } else {
+                inputElement.value = rawValue;
+            }
+        };
+
+        const formatLoanAmount = (inputElement) => {
+            // Apply formatting when losing focus
+            const rawValue = parseLoanAmount(inputElement.value);
+
+            if (isNaN(rawValue) || rawValue <= 0) {
+                // If input is empty, invalid, or zero, leave it visually blank.
+                inputElement.value = '';
+            } else {
+                // Format valid, non-zero amount (e.g., 600000 -> 600,000.00).
+                inputElement.value = formatInputNumber(rawValue);
+            }
+            
+            // TRIGGER LIVE UPDATE IF isCalculated IS TRUE
+            if (isCalculated) {
+                performCalculation();
+            }
+        };
+
+
+        // Utility function to format calculation results as currency
+        const formatCurrency = (number) => {
+            // This is for the result display (Monthly EMI, Total Interest, etc.)
+            return `${currentCurrency.symbol}${number.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+        };
+
+        // --- Currency Modal Functions ---
+
+        const populateCurrencyList = () => {
+            CURRENCY_LIST.innerHTML = ''; // Clear existing list
+            currencies.forEach(currency => {
+                const isSelected = currency.code === currentCurrency.code;
+                const item = document.createElement('div');
+                item.className = `p-3 flex justify-between items-center rounded-lg cursor-pointer transition-colors ${isSelected ? 'bg-primary text-white' : 'bg-gray-100 hover:bg-gray-200'}`;
+                item.innerHTML = `
+                    <span class="font-medium">${currency.name} (${currency.code})</span>
+                    <span class="text-xl font-bold">${currency.symbol}</span>
+                `;
+                item.onclick = () => selectCurrency(currency);
+                CURRENCY_LIST.appendChild(item);
+            });
+        };
+
+        const selectCurrency = (currency) => {
+            currentCurrency = currency;
+            CURRENCY_SYMBOL_SPAN.textContent = currency.symbol;
+            hideCurrencyModal();
+            // Re-run calculation only if live update is active
+            if (isCalculated) {
+                performCalculation();
+            }
+            // Update currency symbols in table headers if details modal is shown
+            document.querySelectorAll('.currency-symbol-table').forEach(el => {
+                el.textContent = currentCurrency.symbol;
+            });
+        };
+
+        const showCurrencyModal = () => {
+            populateCurrencyList();
+            CURRENCY_MODAL.classList.remove('hidden');
+            CURRENCY_MODAL.classList.add('flex');
+        };
+
+        const hideCurrencyModal = () => {
+            CURRENCY_MODAL.classList.add('hidden');
+            CURRENCY_MODAL.classList.remove('flex');
+        };
+
+        // --- Core EMI Calculation Logic ---
+        const calculateEMI = (P, R, N) => {
+            if (P <= 0 || R < 0 || N <= 0) return 0;
+
+            // R is the Annual Rate in % (e.g., 7)
+            // r is the Monthly Rate (e.g., 0.07 / 12)
+            const r = R / 1200;
+
+            if (r === 0) {
+                // Simple interest calculation for 0% interest rate
+                return P / N; 
+            }
+
+            // EMI formula: E = P * r * (1 + r)^n / ((1 + r)^n - 1)
+            const power = Math.pow(1 + r, N);
+            const emi = P * r * power / (power - 1);
+
+            return isFinite(emi) ? emi : 0;
+        };
+        
+        // --- Amortization Schedule Calculation ---
+        const generateAmortizationSchedule = (principal, annualRatePercent, totalMonths, emi) => {
+            let balance = principal;
+            const monthlyRate = annualRatePercent / 1200; // r
+
+            const schedule = [];
+
+            for (let month = 1; month <= totalMonths; month++) {
+                // Interest for the current month: I = Balance * r
+                const interestPaid = balance * monthlyRate;
+
+                // Principal paid: P_paid = EMI - I
+                let principalPaid = emi - interestPaid;
+
+                // Final month adjustments to handle floating point errors
+                if (month === totalMonths) {
+                    principalPaid = balance;
+                    balance = 0;
+                } else {
+                    // New balance: B_new = B_old - Principal Paid
+                    balance -= principalPaid;
+                }
+
+                // Ensure balance doesn't go negative due to rounding
+                balance = Math.max(0, balance);
+                
+                schedule.push({
+                    month: month,
+                    principalPaid: principalPaid,
+                    interestPaid: interestPaid,
+                    remainingBalance: balance
+                });
+
+                if (balance <= 0) break;
+            }
+            return schedule;
+        };
+
+        // --- Main Calculation Function ---
+        const performCalculation = () => {
+            // Get raw number for calculation
+            const P = parseLoanAmount(LOAN_AMOUNT_INPUT.value);
+            const R = parseFloat(RATE_INPUT.value);
+            let N = parseFloat(PERIOD_INPUT.value);
+
+            // Input Validation
+            if (isNaN(P) || isNaN(R) || isNaN(N) || P <= 0 || R < 0 || N <= 0) {
+                RESULT_CARD.classList.add('hidden');
+                return;
+            }
+
+            // Convert period to months if unit is 'year'
+            let N_months = N;
+            if (periodUnit === 'year') {
+                N_months = N * 12;
+            }
+
+            // Calculate EMI
+            const emi = calculateEMI(P, R, N_months);
+            const totalPayment = emi * N_months;
+            const totalInterest = totalPayment - P;
+            
+            // Store results globally for sharing/details
+            window.emiResults = {
+                P: P,
+                R: R,
+                N_input: N,
+                N_months: N_months,
+                unit: periodUnit,
+                emi: emi,
+                totalInterest: totalInterest,
+                totalPayment: totalPayment
+            };
+
+            // Update UI
+            MONTHLY_EMI_SPAN.textContent = formatCurrency(emi);
+            TOTAL_PAYMENT_SPAN.textContent = formatCurrency(totalPayment);
+            TOTAL_INTEREST_SPAN.textContent = formatCurrency(totalInterest);
+
+            // Show Result Card
+            RESULT_CARD.classList.remove('hidden');
+        };
+
+        // --- Details Modal Functions ---
+        
+        const showDetailsModal = () => {
+            DETAILS_MODAL.classList.remove('hidden');
+            DETAILS_MODAL.classList.add('flex');
+        };
+
+        const hideDetailsModal = () => {
+            DETAILS_MODAL.classList.add('hidden');
+            DETAILS_MODAL.classList.remove('flex');
+        };
+        
+        // Function to populate the details modal
+        const populateDetailsModal = (schedule, P, R, N_months, emi, totalInterest, totalPayment) => {
+            // 1. Update summary data
+            document.getElementById('details-monthly-emi').textContent = formatCurrency(emi);
+            document.getElementById('details-rate').textContent = R;
+            document.getElementById('details-period-months').textContent = N_months;
+            
+            document.getElementById('details-loan-amount').textContent = formatCurrency(P);
+            document.getElementById('details-total-interest').textContent = formatCurrency(totalInterest);
+            document.getElementById('details-total-payment').textContent = formatCurrency(totalPayment);
+            
+            // Update all currency symbols in the table header
+            document.querySelectorAll('#details-modal .currency-symbol-table').forEach(el => {
+                el.textContent = currentCurrency.symbol;
+            });
+
+            // 2. Populate table body
+            const tableBody = document.getElementById('amortization-table-body');
+            tableBody.innerHTML = ''; // Clear previous content
+
+            schedule.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50';
+                // Note: The data cells (td) now explicitly use the Tailwind class 'text-sm'
+                tr.innerHTML = `
+                    <td class="py-2 px-1 text-left text-sm font-medium text-gray-900 col-month">${row.month}</td>
+                    <td class="py-2 px-1 text-right text-sm text-gray-700 col-financial">${row.principalPaid.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
+                    <td class="py-2 px-1 text-right text-sm text-gray-700 col-financial">${row.interestPaid.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
+                    <td class="py-2 px-1 text-right text-sm text-gray-700 col-financial">${row.remainingBalance.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        };
+
+        // Function to handle the Details button click
+        const handleDetailsClick = () => {
+            // Ensure calculation is performed first
+            performCalculation(); 
+
+            if (!window.emiResults || RESULT_CARD.classList.contains('hidden')) {
+                 // Do nothing if no valid results are present
+                 return; 
+            }
+            
+            const { P, R, N_months, emi, totalInterest, totalPayment } = window.emiResults;
+
+            // 1. Generate the schedule
+            const schedule = generateAmortizationSchedule(P, R, N_months, emi);
+
+            // 2. Populate the modal with data
+            populateDetailsModal(schedule, P, R, N_months, emi, totalInterest, totalPayment);
+            
+            // 3. Show the modal
+            showDetailsModal();
+        };
+
+        // --- Copy/Share Functions ---
+
+        // Utility function to copy text to clipboard
+        const copyToClipboard = (text, successMessage) => {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                // Use execCommand('copy') as navigator.clipboard might not work in some environments
+                document.execCommand('copy'); 
+                // We skip the custom message box for a cleaner UX
+            } catch (err) {
+                console.error('Could not copy text: ', err);
+            }
+            document.body.removeChild(tempInput);
+        };
+
+        // Copy EMI amount from main card
+        const handleCopyEMI = () => {
+            const emiText = MONTHLY_EMI_SPAN.textContent;
+            copyToClipboard(emiText, "Monthly EMI copied to clipboard!");
+        };
+
+        // Copy details summary from modal
+        const handleCopyDetails = () => {
+            if (!window.emiResults) return;
+
+            const { P, R, N_input, unit, emi, totalInterest, totalPayment } = window.emiResults;
+
+            const loanAmountFormatted = formatCurrency(P);
+            const emiFormatted = formatCurrency(emi);
+            const totalInterestFormatted = formatCurrency(totalInterest);
+            const totalPaymentFormatted = formatCurrency(totalPayment);
+            
+            const copyText = `--- EMI Calculation Summary ---\n
+Loan Amount: ${loanAmountFormatted}
+Rate of Interest: ${R}%
+Period: ${N_input} ${unit}(s)
+
+Monthly EMI: ${emiFormatted}
+
+Total Interest Paid: ${totalInterestFormatted}
+Total Payment: ${totalPaymentFormatted}\n
+---
+`;
+            copyToClipboard(copyText, "Full EMI summary copied to clipboard!");
+        };
+
+        // --- Event Handlers ---
+        
+        // Live update listener for rate and period inputs
+        const liveUpdateHandler = () => {
+            if (isCalculated) {
+                performCalculation();
+            }
+        };
+
+        // Handle the Calculate button click: perform calculation and activate live mode
+        const handleCalculate = () => {
+            performCalculation();
+            
+            // Only attach listeners the first time
+            if (!isCalculated) {
+                isCalculated = true;
+                // Attach listeners for live update mode for Rate and Period
+                RATE_INPUT.addEventListener('input', liveUpdateHandler);
+                PERIOD_INPUT.addEventListener('input', liveUpdateHandler);
+            }
+        };
+
+        const handleUnitToggle = (event) => {
+            const newUnit = event.target.dataset.unit;
+            if (newUnit === periodUnit) return;
+
+            periodUnit = newUnit;
+            
+            // Only run calculation if it's already in live mode
+            if (isCalculated) {
+                performCalculation();
+            }
+
+            // Update button styles
+            if (periodUnit === 'month') {
+                TOGGLE_MONTH.classList.add('toggle-active');
+                TOGGLE_MONTH.classList.remove('toggle-inactive');
+                TOGGLE_YEAR.classList.remove('toggle-active');
+                TOGGLE_YEAR.classList.add('toggle-inactive');
+            } else {
+                TOGGLE_YEAR.classList.add('toggle-active');
+                TOGGLE_YEAR.classList.remove('toggle-inactive');
+                TOGGLE_MONTH.classList.remove('toggle-active');
+                TOGGLE_MONTH.classList.add('toggle-inactive');
+            }
+        };
+
+        const handleReset = () => {
+            // Reset input values
+            LOAN_AMOUNT_INPUT.value = ''; 
+            RATE_INPUT.value = '';
+            PERIOD_INPUT.value = '';
+            
+            // Remove live update listeners
+            RATE_INPUT.removeEventListener('input', liveUpdateHandler);
+            PERIOD_INPUT.removeEventListener('input', liveUpdateHandler);
+            
+            // Reset state
+            isCalculated = false;
+            window.emiResults = null; // Clear stored results
+            
+            // Reset period unit to default (Month)
+            periodUnit = 'month';
+            TOGGLE_MONTH.classList.add('toggle-active');
+            TOGGLE_MONTH.classList.remove('toggle-inactive');
+            TOGGLE_YEAR.classList.remove('toggle-active');
+            TOGGLE_YEAR.classList.add('toggle-inactive');
+
+            // Hide result card
+            RESULT_CARD.classList.add('hidden');
+        };
+        
+        // --- Initialization ---
+        const initializeApp = () => {
+            // Set initial currency symbol display (USD)
+            CURRENCY_SYMBOL_SPAN.textContent = currentCurrency.symbol;
+            
+            // Set initial currency symbols in the hidden table headers
+            document.querySelectorAll('.currency-symbol-table').forEach(el => {
+                el.textContent = currentCurrency.symbol;
+            });
+
+            // Attach Event Listeners
+            CALCULATE_BTN.addEventListener('click', handleCalculate);
+            RESET_BTN.addEventListener('click', handleReset);
+            TOGGLE_YEAR.addEventListener('click', handleUnitToggle);
+            TOGGLE_MONTH.addEventListener('click', handleUnitToggle);
+            
+            // Attach Copy Listeners
+            COPY_EMI_BTN.addEventListener('click', handleCopyEMI);
+            COPY_DETAILS_BTN.addEventListener('click', handleCopyDetails);
+            
+            // New Listeners for Details Modal
+            DETAILS_BTN.addEventListener('click', handleDetailsClick);
+            CLOSE_DETAILS_BTN.addEventListener('click', hideDetailsModal);
+        };
+
+        window.onload = initializeApp;
+
+    </script>
+</body>
+</html>
